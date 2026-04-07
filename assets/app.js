@@ -181,20 +181,89 @@ const MOCK_POSTS = [
     summary: "매출 0원에서 ARR 100억까지, 단계별로 투자자가 보는 숫자가 어떻게 달라지는가.",
     category_name: "투자 가이드", writer_name: "최서연", content: "a".repeat(5000), create_date: "2026-03-27" },
   { idx: 5, subject: "SAFE 노트와 컨버터블 노트, 한국 스타트업이 자주 놓치는 차이",
-    summary: "", category_name: "투자 가이드", writer_name: "편집팀",
-    create_date: "2026-04-02", content: "a".repeat(2000) },
+    summary: "가장 많이 쓰는 초기 투자 계약서 두 가지. 똑같아 보여도 결과가 다르다.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-04-02" },
   { idx: 6, subject: "딥테크 투자에 적합한 KPI는 무엇인가 — 매출이 답이 아닐 때",
-    summary: "", category_name: "시장 리포트", writer_name: "편집팀",
-    create_date: "2026-03-28", content: "a".repeat(2000) },
+    summary: "기술 기반 스타트업을 평가할 때 매출만으로 부족한 이유와 대안 지표들.",
+    category_name: "시장 리포트", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-03-28" },
   { idx: 7, subject: "해외 투자자와의 첫 미팅 전에 준비해야 할 6가지",
-    summary: "", category_name: "IR 전략", writer_name: "편집팀",
-    create_date: "2026-03-21", content: "a".repeat(2000) },
+    summary: "글로벌 VC 미팅 전 반드시 챙겨야 할 실전 체크리스트.",
+    category_name: "IR 전략", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-03-21" },
   { idx: 8, subject: "파운더가 묻는다: '지분 얼마까지 내줘도 괜찮나요?'",
-    summary: "", category_name: "투자 가이드", writer_name: "편집팀",
-    create_date: "2026-03-15", content: "a".repeat(2000) },
+    summary: "라운드별 적정 희석률과 Cap Table 관리 전략.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-03-15" },
   { idx: 9, subject: "프라이머 권도균 대표 — '지속가능한 회사의 첫 번째 조건'",
-    summary: "", category_name: "투자자 인터뷰", writer_name: "편집팀",
-    create_date: "2026-03-12", content: "a".repeat(2000) },
+    summary: "파운더 출신 투자자의 눈으로 보는 좋은 회사의 기준.",
+    category_name: "투자자 인터뷰", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-03-12" },
+  { idx: 10, subject: "AI 스타트업 투자 심사 기준: 2026년 판도 변화",
+    summary: "파운데이션 모델 시대에 VC가 새롭게 보는 평가 포인트들.",
+    category_name: "시장 리포트", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-03-10" },
+  { idx: 11, subject: "IR 덱에서 절대 넣지 말아야 할 슬라이드 7가지",
+    summary: "심사역이 덮는 순간을 만드는 피해야 할 슬라이드들.",
+    category_name: "IR 전략", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-03-08" },
+  { idx: 12, subject: "소프트뱅크 벤처스 이준표 대표 — '한국 시장에서 유니콘을 만드는 법'",
+    summary: "한국에서 글로벌로 가는 스타트업의 공통점을 묻다.",
+    category_name: "투자자 인터뷰", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-03-05" },
+  { idx: 13, subject: "Seed 라운드 밸류에이션, 얼마가 적정인가",
+    summary: "시장 데이터로 보는 2026년 Seed 적정 밸류에이션 밴드.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-03-01" },
+  { idx: 14, subject: "2025년 한국 벤처 시장 연간 리포트: 숫자로 돌아본 12개월",
+    summary: "투자금액·건수·섹터별 분포를 한 눈에 정리한 연간 리포트.",
+    category_name: "시장 리포트", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-02-28" },
+  { idx: 15, subject: "텀시트에서 창업자가 놓치기 쉬운 독소 조항 5가지",
+    summary: "Liquidation preference, drag-along, 반희석 조항 쉽게 이해하기.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-02-22" },
+  { idx: 16, subject: "한국투자파트너스 김영덕 대표 — '포트폴리오 전략의 3원칙'",
+    summary: "20년 경력 투자자가 말하는 분산·집중·타이밍의 원칙.",
+    category_name: "투자자 인터뷰", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-02-15" },
+  { idx: 17, subject: "바이오 섹터 투자 동향: 임상 단계별 밸류에이션 로직",
+    summary: "Phase 1, 2, 3 임상 단계에 따른 기업가치 변화 패턴.",
+    category_name: "시장 리포트", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-02-10" },
+  { idx: 18, subject: "IR 미팅에서 심사역이 실제로 메모하는 것들",
+    summary: "미팅 노트에 적히는 3가지 카테고리와 그 의미.",
+    category_name: "IR 전략", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-02-05" },
+  { idx: 19, subject: "창업자가 VC에게 물어봐야 할 10가지 질문",
+    summary: "좋은 투자자는 좋은 질문에 답한다. 체크리스트.",
+    category_name: "IR 전략", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-01-30" },
+  { idx: 20, subject: "카카오벤처스 김기준 대표 — '플랫폼 사업 투자 기준'",
+    summary: "플랫폼 비즈니스 모델 평가의 핵심 지표.",
+    category_name: "투자자 인터뷰", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-01-25" },
+  { idx: 21, subject: "Series B에서 성장률과 효율성, 무엇이 더 중요한가",
+    summary: "Rule of 40으로 보는 Series B 기업 평가.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-01-20" },
+  { idx: 22, subject: "ESG 투자, 한국 벤처 생태계에 얼마나 자리잡았나",
+    summary: "ESG 기준이 한국 VC의 투자 의사결정에 미치는 영향.",
+    category_name: "시장 리포트", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-01-15" },
+  { idx: 23, subject: "데이터룸(Data Room) 완벽 가이드: 실사 대비 체크리스트",
+    summary: "심사역이 실사 단계에서 확인하는 문서들 총정리.",
+    category_name: "IR 전략", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-01-10" },
+  { idx: 24, subject: "IMM 인베스트먼트 장동우 대표 — '한국 중견기업 투자의 묘미'",
+    summary: "Growth 단계 투자의 성공 공식과 실패 사례들.",
+    category_name: "투자자 인터뷰", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2026-01-05" },
+  { idx: 25, subject: "Pre-Series A 단계에서 절대 놓치지 말아야 할 3가지",
+    summary: "Seed와 Series A 사이, 가장 많이 흔들리는 구간.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2025-12-28" },
+  { idx: 26, subject: "ESOP(스톡옵션) 설계의 정석: 인재 확보와 지분 희석의 균형",
+    summary: "초기 팀에 얼마를 배정할지, 언제 행사하게 할지의 원칙.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2025-12-20" },
+  { idx: 27, subject: "Convertible Note vs SAFE: 어느 쪽이 우리에게 맞을까",
+    summary: "두 계약 구조의 장단점과 한국 시장에서의 사용 사례.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2025-12-15" },
+  { idx: 28, subject: "Cap Table 관리 도구 비교: Carta, Pulley, 엑셀까지",
+    summary: "단계별로 어떤 도구가 적합한지, 전환 시점은 언제인지.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2025-12-10" },
+  { idx: 29, subject: "밸류에이션 10배의 차이를 만드는 3가지 스토리텔링",
+    summary: "같은 사업이어도 다르게 보이게 하는 내러티브 설계.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2025-12-05" },
+  { idx: 30, subject: "벤처대출(Venture Debt)을 언제 써야 하는가",
+    summary: "지분 희석 없이 런웨이를 늘리는 방법과 리스크.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2025-11-28" },
+  { idx: 31, subject: "다운라운드를 피할 수 없을 때 창업자가 취할 수 있는 선택",
+    summary: "벤치마크 밸류가 떨어졌을 때 현실적인 선택지들.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2025-11-20" },
+  { idx: 32, subject: "Secondary 거래: 창업자가 구주를 파는 올바른 타이밍",
+    summary: "라운드별 적정 세컨더리 비율과 투자자 반응.",
+    category_name: "투자 가이드", writer_name: "편집팀", content: "a".repeat(2000), create_date: "2025-11-15" },
 ];
 
 // =====================================================
@@ -475,20 +544,22 @@ function filterByCategory(posts, slug) {
   if (!slug) return posts;
   const name = CATEGORIES[slug]?.name;
   if (!name) return posts;
-  return posts.filter(p => (p.category_name || "").includes(name.split(" ")[0]));
+  return posts.filter(p => (p.category_name || "").trim() === name);
 }
 
 // =====================================================
 // 페이지별 초기화
 // =====================================================
+const PER_PAGE = 12;
+
 async function initHome() {
-  renderSkeletons("featured-grid", 4);
+  renderSkeletons("featured-grid", 6);
 
   let posts = MOCK_POSTS;
   let usedMock = false;
 
   try {
-    const result = await fetchPosts({ limit: 12 });
+    const result = await fetchPosts({ limit: 20 });
     if (result?.list?.length) posts = result.list;
     else { usedMock = true; }
   } catch (err) {
@@ -507,18 +578,21 @@ async function initHome() {
   }
 
   renderEditorPick("editor-pick", posts[0]);
-  renderFeaturedCards("featured-grid", posts.slice(1), 4);
-  renderRecentList("recent-list", posts, 5, 6);
+  renderFeaturedCards("featured-grid", posts.slice(1), 6);     // 3 x 2 = 6
+  renderRecentList("recent-list", posts, 7, 6);
 }
 
 async function initCategory(slug) {
-  renderSkeletons("featured-grid", 6);
+  const params = new URLSearchParams(window.location.search);
+  const page = Math.max(1, parseInt(params.get("page") || "1", 10));
+
+  renderSkeletons("featured-grid", PER_PAGE);
 
   let posts = MOCK_POSTS;
   let usedMock = false;
 
   try {
-    const result = await fetchPosts({ limit: 30, category: CATEGORIES[slug]?.name });
+    const result = await fetchPosts({ limit: 200, category: CATEGORIES[slug]?.name });
     if (result?.list?.length) posts = result.list;
     else { usedMock = true; }
   } catch (err) {
@@ -537,5 +611,55 @@ async function initCategory(slug) {
     if (notice) notice.style.display = "block";
   }
 
-  renderFeaturedCards("featured-grid", posts, 12);
+  const total = posts.length;
+  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  const start = (page - 1) * PER_PAGE;
+  const pageItems = posts.slice(start, start + PER_PAGE);
+
+  renderFeaturedCards("featured-grid", pageItems, PER_PAGE);
+  renderPagination("pagination", { page, pages, baseUrl: window.location.pathname });
+}
+
+// =====================================================
+// 페이지네이션 렌더러
+// =====================================================
+function renderPagination(targetId, { page, pages, baseUrl }) {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+  if (pages <= 1) { el.innerHTML = ""; return; }
+
+  const href = (p) => `${baseUrl}?page=${p}`;
+  const parts = [];
+
+  // Prev
+  if (page > 1) parts.push(`<a href="${href(page - 1)}" class="prev" aria-label="이전 페이지">‹</a>`);
+  else parts.push(`<span class="disabled">‹</span>`);
+
+  // 번호: 최대 7개 창 (현재 페이지 중심)
+  const window_ = 2;
+  let from = Math.max(1, page - window_);
+  let to   = Math.min(pages, page + window_);
+  if (to - from < 4) {
+    if (from === 1) to = Math.min(pages, from + 4);
+    if (to === pages) from = Math.max(1, to - 4);
+  }
+
+  if (from > 1) {
+    parts.push(`<a href="${href(1)}">1</a>`);
+    if (from > 2) parts.push(`<span class="gap">…</span>`);
+  }
+  for (let i = from; i <= to; i++) {
+    if (i === page) parts.push(`<span class="current">${i}</span>`);
+    else parts.push(`<a href="${href(i)}">${i}</a>`);
+  }
+  if (to < pages) {
+    if (to < pages - 1) parts.push(`<span class="gap">…</span>`);
+    parts.push(`<a href="${href(pages)}">${pages}</a>`);
+  }
+
+  // Next
+  if (page < pages) parts.push(`<a href="${href(page + 1)}" class="next" aria-label="다음 페이지">›</a>`);
+  else parts.push(`<span class="disabled">›</span>`);
+
+  el.innerHTML = parts.join("");
 }
