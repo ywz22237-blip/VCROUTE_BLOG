@@ -279,8 +279,23 @@ async function initPost() {
     if (notice) notice.style.display = "block";
   }
 
-  // 헤더
+  // 헤더 + 메타데이터
+  const desc = post.summary || (post.content ? post.content.replace(/<[^>]+>/g,"").slice(0,160) : "VC route Insights의 인사이트 글.");
+  const ogImg = post.thumbnail_url || "https://blog.vcroute.com/assets/og-default.svg";
+  const url = window.location.href;
+
   document.title = `${post.subject} — VC route Insights`;
+  const setAttr = (id, attr, val) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); };
+  setAttr("meta-desc",      "content", desc);
+  setAttr("meta-canonical", "href",    url);
+  setAttr("og-title",       "content", `${post.subject} — VC route Insights`);
+  setAttr("og-desc",        "content", desc);
+  setAttr("og-url",         "content", url);
+  setAttr("og-image",       "content", ogImg);
+  setAttr("tw-title",       "content", `${post.subject} — VC route Insights`);
+  setAttr("tw-desc",        "content", desc);
+  setAttr("tw-image",       "content", ogImg);
+
   document.getElementById("post-category").textContent = post.category_name || "인사이트";
   document.getElementById("post-title").textContent = post.subject;
   document.getElementById("post-lead").textContent = post.summary || "";
@@ -347,6 +362,114 @@ async function initPost() {
   }
   renderFeaturedCards("related-grid", related, 3);
 }
+
+// =====================================================
+// 검색 (모든 페이지에서 동작)
+// =====================================================
+let _searchCache = null;
+async function loadSearchIndex() {
+  if (_searchCache) return _searchCache;
+  try {
+    const result = await fetchPosts({ limit: 100 });
+    if (result?.list?.length) { _searchCache = result.list; return _searchCache; }
+  } catch {}
+  _searchCache = MOCK_POSTS;
+  return _searchCache;
+}
+
+function escapeHtml(s) {
+  return String(s || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function highlight(text, q) {
+  if (!q) return escapeHtml(text);
+  const safe = escapeHtml(text);
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+  return safe.replace(re, "<mark>$1</mark>");
+}
+
+function mountSearch() {
+  if (document.getElementById("search-modal")) return;
+  // 헤더에 .search 트리거가 없는 페이지(임베드 위젯 등)에서는 마운트하지 않음
+  if (!document.querySelector(".search")) return;
+
+  const modal = document.createElement("div");
+  modal.id = "search-modal";
+  modal.className = "search-modal";
+  modal.innerHTML = `
+    <div class="search-box" role="dialog" aria-label="검색">
+      <div class="search-input-wrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="search-modal-input" type="search" placeholder="제목, 요약, 카테고리로 검색..." autocomplete="off" />
+        <kbd>ESC</kbd>
+      </div>
+      <div class="search-results" id="search-results">
+        <div class="empty">검색어를 입력하세요.</div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  const input  = modal.querySelector("#search-modal-input");
+  const result = modal.querySelector("#search-results");
+  let posts    = [];
+
+  const open = async () => {
+    modal.classList.add("open");
+    setTimeout(() => input.focus(), 50);
+    if (posts.length === 0) posts = await loadSearchIndex();
+  };
+  const close = () => { modal.classList.remove("open"); input.value = ""; render(""); };
+
+  const render = (q) => {
+    if (!q) {
+      result.innerHTML = `<div class="empty">검색어를 입력하세요.</div>`;
+      return;
+    }
+    const lc = q.toLowerCase();
+    const hits = posts.filter(p =>
+      (p.subject || "").toLowerCase().includes(lc) ||
+      (p.summary || "").toLowerCase().includes(lc) ||
+      (p.category_name || "").toLowerCase().includes(lc)
+    ).slice(0, 12);
+
+    if (hits.length === 0) {
+      result.innerHTML = `<div class="empty">"${escapeHtml(q)}"에 대한 결과가 없습니다.</div>`;
+      return;
+    }
+    result.innerHTML = hits.map(p => `
+      <a class="search-result" href="${postUrl(p)}">
+        <div class="cat">${escapeHtml(p.category_name || "인사이트")}</div>
+        <h5>${highlight(p.subject, q)}</h5>
+        <p>${highlight(p.summary || "", q)}</p>
+      </a>
+    `).join("");
+  };
+
+  // 입력
+  input.addEventListener("input", (e) => render(e.target.value.trim()));
+
+  // 닫기: ESC, 배경 클릭
+  modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) close();
+    // Cmd/Ctrl+K로 열기
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      modal.classList.contains("open") ? close() : open();
+    }
+  });
+
+  // 헤더의 모든 .search 클릭/포커스 시 모달 열기
+  document.querySelectorAll(".search input").forEach(el => {
+    el.addEventListener("focus", (e) => { e.target.blur(); open(); });
+    el.addEventListener("click", open);
+  });
+  document.querySelectorAll(".search").forEach(el => {
+    el.addEventListener("click", open);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", mountSearch);
 
 function filterByCategory(posts, slug) {
   if (!slug) return posts;
