@@ -197,6 +197,157 @@ const MOCK_POSTS = [
     create_date: "2026-03-12", content: "a".repeat(2000) },
 ];
 
+// =====================================================
+// 상세 페이지 렌더링
+// =====================================================
+async function fetchPostById(id) {
+  // Netlify Function이 단건 조회를 지원하지 않으므로 list에서 찾기
+  try {
+    const result = await fetchPosts({ limit: 50 });
+    const list = result?.list || [];
+    return list.find(p => String(p.idx || p.id) === String(id));
+  } catch {
+    return null;
+  }
+}
+
+function buildToc(bodyEl, tocEl) {
+  if (!bodyEl || !tocEl) return;
+  const headings = bodyEl.querySelectorAll("h2, h3");
+  if (headings.length === 0) { tocEl.parentElement.style.display = "none"; return; }
+
+  const ul = document.createElement("ul");
+  headings.forEach((h, i) => {
+    const id = `h-${i}`;
+    h.id = id;
+    const li = document.createElement("li");
+    if (h.tagName === "H3") li.className = "toc-h3";
+    li.innerHTML = `<a href="#${id}">${h.textContent}</a>`;
+    ul.appendChild(li);
+  });
+  tocEl.appendChild(ul);
+
+  // Active 표시
+  const links = tocEl.querySelectorAll("a");
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle("active", l.getAttribute("href") === `#${e.target.id}`));
+      }
+    });
+  }, { rootMargin: "-40% 0px -55% 0px" });
+  headings.forEach(h => observer.observe(h));
+}
+
+function bindShareButtons(post) {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent(post.subject || "");
+
+  const map = {
+    "share-linkedin": `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+    "share-facebook": `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+    "share-x":        `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+  };
+  Object.entries(map).forEach(([id, link]) => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener("click", () => window.open(link, "_blank", "noopener,width=600,height=520"));
+  });
+
+  const copy = document.getElementById("share-copy");
+  if (copy) {
+    copy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        copy.title = "복사됨!";
+        setTimeout(() => copy.title = "링크 복사", 1500);
+      } catch {}
+    });
+  }
+}
+
+async function initPost() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  let post = null;
+  if (id) {
+    try { post = await fetchPostById(id); } catch {}
+  }
+  if (!post) {
+    post = MOCK_POSTS.find(p => String(p.idx) === String(id)) || MOCK_POSTS[0];
+    const notice = document.getElementById("api-notice");
+    if (notice) notice.style.display = "block";
+  }
+
+  // 헤더
+  document.title = `${post.subject} — VC route Insights`;
+  document.getElementById("post-category").textContent = post.category_name || "인사이트";
+  document.getElementById("post-title").textContent = post.subject;
+  document.getElementById("post-lead").textContent = post.summary || "";
+  document.getElementById("post-author").textContent = post.writer_name || "VC route 리서치팀";
+  document.getElementById("post-date").textContent = formatDate(post.create_date);
+  document.getElementById("post-readtime").textContent = estimateReadTime(post.content);
+
+  const avatar = document.getElementById("post-avatar");
+  if (avatar) avatar.textContent = (post.writer_name || "VC")[0];
+  const authorBio = document.getElementById("post-author-bio");
+  if (authorBio) authorBio.textContent = `${post.writer_name || "VC route 리서치팀"} · VC route Insights`;
+
+  // 커버
+  const cover = document.getElementById("post-cover");
+  if (cover) {
+    cover.innerHTML = post.thumbnail_url
+      ? `<img src="${post.thumbnail_url}" alt="${post.subject}" />`
+      : PLACEHOLDER_SVGS[(post.idx || 0) % PLACEHOLDER_SVGS.length];
+  }
+
+  // 본문
+  const body = document.getElementById("post-body");
+  if (body) {
+    if (post.content && post.content.length > 100 && post.content.includes("<")) {
+      body.innerHTML = post.content;
+    } else {
+      // 목업/평문일 경우 더미 본문
+      body.innerHTML = `
+        <p>${post.summary || "이 글은 아임웹에서 작성된 콘텐츠를 표시하는 샘플 페이지입니다."}</p>
+        <h2>1. 시장의 변화는 어디서 시작되는가</h2>
+        <p>스타트업 투자 시장은 매 분기 다른 얼굴을 보여줍니다. 데이터로 보는 흐름은 직관과 다를 때가 많습니다. 2026년 1분기 한국 벤처투자 시장은 작년 대비 회복세를 보이고 있지만, 평균 라운드 사이즈는 여전히 작은 수준입니다.</p>
+        <h3>1.1 투자 건수 vs 라운드 사이즈</h3>
+        <p>건수가 늘어났다는 것은 시장이 활성화되고 있다는 긍정적 신호이지만, 평균 투자액이 줄어들고 있다는 것은 투자자들이 여전히 조심스럽게 접근하고 있다는 의미입니다.</p>
+        <blockquote>"투자자가 보는 것은 숫자가 아니라 그 숫자 뒤의 이야기다." — 익명의 심사역</blockquote>
+        <h2>2. 심사역이 진짜 보는 디테일</h2>
+        <p>100건이 넘는 IR 미팅 데이터를 분석한 결과, 첫 3장에서 결정되는 신호는 명확합니다. 시장의 크기, 팀의 역량, 그리고 문제 정의의 명료함입니다.</p>
+        <ul>
+          <li>시장 크기와 성장률을 명확한 숫자로 제시할 것</li>
+          <li>팀의 unique insight를 한 문장으로 요약할 것</li>
+          <li>현재 트랙션을 정직하게 공개할 것</li>
+        </ul>
+        <h2>3. 결론: 다음 분기를 위한 준비</h2>
+        <p>다음 분기에 투자를 받으려는 창업자라면, 지금부터 준비해야 할 것은 데이터와 스토리의 균형입니다. 둘 중 하나만으로는 부족합니다.</p>
+      `;
+    }
+
+    buildToc(body, document.getElementById("post-toc"));
+  }
+
+  bindShareButtons(post);
+
+  // 관련 글: 같은 카테고리 다른 글
+  let related = MOCK_POSTS;
+  try {
+    const result = await fetchPosts({ limit: 12 });
+    if (result?.list?.length) related = result.list;
+  } catch {}
+  related = related
+    .filter(p => String(p.idx || p.id) !== String(post.idx || post.id))
+    .filter(p => !post.category_name || (p.category_name || "").includes((post.category_name || "").split(" ")[0]))
+    .slice(0, 3);
+  if (related.length < 3) {
+    related = MOCK_POSTS.filter(p => String(p.idx) !== String(post.idx)).slice(0, 3);
+  }
+  renderFeaturedCards("related-grid", related, 3);
+}
+
 function filterByCategory(posts, slug) {
   if (!slug) return posts;
   const name = CATEGORIES[slug]?.name;
