@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VC route Insights — 벤처투자 인사이트</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+  :root {
+    --brand: #3858E9;
+    --brand-dark: #1E3FCE;
+    --ink: #1E1E1E;
+    --text: #2C3338;
+    --muted: #6B7280;
+    --line: #E7E7E9;
+    --bg: #FFFFFF;
+    --soft: #F7F7F8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ===== Header ===== */
+  header {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .nav {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 22px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .brand-mark {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--brand);
+    color: #fff;
+    display: grid; place-items: center;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+  nav ul {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  nav a:hover { color: var(--brand); }
+  .cta-top {
+    background: var(--ink);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+    transition: background .2s;
+  }
+  .cta-top:hover { background: var(--brand); }
+
+  /* ===== Main Layout ===== */
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 80px 48px 120px;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .intro {
+    position: sticky;
+    top: 120px;
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--brand);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .intro h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .intro p {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .intro .meta {
+    font-size: 13px;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+  .intro .meta strong { color: var(--ink); font-weight: 600; }
+
+  /* ===== Featured Grid ===== */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px 40px;
+  }
+  .card { display: block; cursor: pointer; }
+  .card .thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 18px;
+    background: var(--soft);
+    position: relative;
+  }
+  .card .thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .card .thumb .thumb-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--brand) 0%, #7A8FF5 100%);
+  }
+  .card .tags {
+    font-size: 12px;
+    color: var(--brand);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+    transition: color .2s;
+  }
+  .card:hover h3 { color: var(--brand); }
+  .card .excerpt {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .card .byline {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ===== Loading skeleton ===== */
+  .skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 4px;
+  }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  .skel-thumb { width: 100%; aspect-ratio: 4/3; border-radius: 4px; margin-bottom: 18px; }
+  .skel-line { height: 14px; margin-bottom: 10px; }
+  .skel-title { height: 22px; margin-bottom: 8px; }
+
+  /* ===== Recent Posts List ===== */
+  .section-title {
+    margin-top: 120px;
+    border-top: 1px solid var(--line);
+    padding-top: 40px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .section-title h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .section-title a {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--brand);
+  }
+  .section-title a::after { content: " →"; }
+  .list {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  .mini { padding: 0; cursor: pointer; }
+  .mini .num {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .mini h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.4;
+    margin-bottom: 6px;
+    transition: color .2s;
+  }
+  .mini:hover h4 { color: var(--brand); }
+  .mini .meta { font-size: 12px; color: var(--muted); }
+
+  /* ===== Newsletter ===== */
+  .newsletter {
+    margin-top: 120px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 8px;
+    padding: 56px 64px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+  }
+  .newsletter h3 { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
+  .newsletter p { font-size: 14px; color: rgba(255,255,255,0.7); max-width: 520px; }
+  .newsletter .form { display: flex; gap: 8px; }
+  .newsletter input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 260px;
+    font-family: inherit;
+  }
+  .newsletter input::placeholder { color: rgba(255,255,255,0.4); }
+  .newsletter button {
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s;
+  }
+  .newsletter button:hover { background: var(--brand-dark); }
+
+  /* ===== Footer ===== */
+  footer { border-top: 1px solid var(--line); margin-top: 120px; padding: 48px 48px 64px; }
+  .foot {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 40px; font-size: 13px; color: var(--muted);
+  }
+  .foot h5 { color: var(--ink); font-size: 13px; font-weight: 700; margin-bottom: 14px; }
+  .foot ul { list-style: none; }
+  .foot li { margin-bottom: 8px; }
+  .foot a:hover { color: var(--brand); }
+  .copy {
+    max-width: 1280px; margin: 40px auto 0;
+    padding-top: 24px; border-top: 1px solid var(--line);
+    font-size: 12px; color: var(--muted);
+    display: flex; justify-content: space-between;
+  }
+
+  /* ===== Error banner ===== */
+  .api-notice {
+    background: #FFF8E1;
+    border: 1px solid #FFE082;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #795548;
+    margin-bottom: 24px;
+    display: none;
+  }
+
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; gap: 48px; }
+    .intro { position: static; }
+    .grid { grid-template-columns: 1fr; gap: 48px; }
+    .list { grid-template-columns: 1fr; }
+    .newsletter { grid-template-columns: 1fr; padding: 40px; }
+    .newsletter input { min-width: 0; width: 100%; }
+    .foot { grid-template-columns: 1fr 1fr; }
+    .nav { padding: 20px 24px; }
+    main { padding: 48px 24px 80px; }
+    nav ul { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- =====================================================
+  ⚙️ 아임웹 API 설정
+  아래 값을 본인의 API Key / Secret Key 로 교체하세요.
+  단, 브라우저에서 직접 호출하면 CORS 오류가 발생합니다.
+  실서비스에서는 서버(Node.js / PHP / Netlify Function 등)를
+  통해 토큰을 발급하고 프록시로 API를 호출하세요.
+====================================================== -->
+<script>
+const IMWEB_CONFIG = {
+  apiKey:    "YOUR_API_KEY",       // ← 아임웹 API Key 입력
+  secretKey: "YOUR_SECRET_KEY",    // ← 아임웹 Secret Key 입력
+
+  // 아임웹 관리자 > 컨텐츠 관리 > 게시판 에서 확인
+  boardCode: "YOUR_BOARD_CODE",    // ← 게시판 코드 입력
+
+  // 아임웹 API 기본 URL (CORS 우회 프록시 사용 시 여기를 변경)
+  baseUrl: "https://api.imweb.me/v2",
+
+  // 피처드 카드에 표시할 게시글 수
+  featuredCount: 4,
+  // 최근 글 목록에 표시할 게시글 수
+  recentCount: 6,
+};
+
+// =====================================================
+// 아임웹 API 헬퍼
+// =====================================================
+let _token = null;
+let _tokenExpiry = 0;
+
+async function getToken() {
+  if (_token && Date.now() < _tokenExpiry) return _token;
+
+  const url = `${IMWEB_CONFIG.baseUrl}/auth?key=${IMWEB_CONFIG.apiKey}&secret=${IMWEB_CONFIG.secretKey}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("토큰 발급 실패");
+  const { data } = await res.json();
+  _token = data.access_token;
+  _tokenExpiry = Date.now() + 55 * 60 * 1000; // 55분
+  return _token;
+}
+
+async function fetchPosts(limit = 10, page = 1) {
+  const token = await getToken();
+  const url = `${IMWEB_CONFIG.baseUrl}/boards/${IMWEB_CONFIG.boardCode}/posts?limit=${limit}&page=${page}`;
+  const res = await fetch(url, { headers: { "access-token": token } });
+  if (!res.ok) throw new Error("게시글 조회 실패");
+  const { data } = await res.json();
+  return data; // { list: [...], total_count, page, limit }
+}
+
+// =====================================================
+// 썸네일 placeholder SVG (이미지 없는 게시글용)
+// =====================================================
+const PLACEHOLDER_SVGS = [
+  `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+    <rect width="400" height="300" fill="#3858E9"/>
+    <g fill="#fff" opacity="0.8">
+      <circle cx="80" cy="220" r="12"/><circle cx="150" cy="175" r="12"/>
+      <circle cx="220" cy="195" r="12"/><circle cx="290" cy="140" r="12"/><circle cx="340" cy="105" r="12"/>
+      <path d="M80 220 L150 175 L220 195 L290 140 L340 105" stroke="#fff" stroke-width="2.5" fill="none"/>
+    </g>
+  </svg>`,
+  `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+    <rect width="400" height="300" fill="#1E1E1E"/>
+    <rect x="55" y="80" width="58" height="160" rx="3" fill="#3858E9"/>
+    <rect x="135" y="120" width="58" height="120" rx="3" fill="#5570EE"/>
+    <rect x="215" y="60" width="58" height="180" rx="3" fill="#3858E9"/>
+    <rect x="295" y="140" width="58" height="100" rx="3" fill="#7A8FF5"/>
+    <line x1="40" y1="240" x2="375" y2="240" stroke="#fff" stroke-width="1.5" opacity="0.35"/>
+  </svg>`,
+  `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+    <rect width="400" height="300" fill="#EEF1FE"/>
+    <g fill="none" stroke="#3858E9" stroke-width="1.8">
+      <circle cx="200" cy="150" r="38"/><circle cx="200" cy="150" r="68"/>
+      <circle cx="200" cy="150" r="98"/><circle cx="200" cy="150" r="128"/>
+    </g>
+    <circle cx="200" cy="150" r="7" fill="#3858E9"/>
+  </svg>`,
+  `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+    <rect width="400" height="300" fill="#F7F7F8"/>
+    <rect x="55" y="60" width="280" height="38" rx="6" fill="#E7E7E9"/>
+    <rect x="55" y="115" width="220" height="18" rx="4" fill="#E7E7E9"/>
+    <rect x="55" y="143" width="180" height="18" rx="4" fill="#E7E7E9"/>
+    <rect x="55" y="195" width="120" height="42" rx="21" fill="#3858E9"/>
+  </svg>`,
+];
+
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  return `${d.getFullYear()}. ${String(d.getMonth()+1).padStart(2,'0')}. ${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function estimateReadTime(content) {
+  if (!content) return "5분 읽기";
+  const words = content.replace(/<[^>]+>/g, "").length;
+  const minutes = Math.max(2, Math.round(words / 500));
+  return `${minutes}분 읽기`;
+}
+
+// =====================================================
+// 피처드 카드 렌더링
+// =====================================================
+function renderFeaturedCards(posts) {
+  const grid = document.getElementById("featured-grid");
+  if (!posts || posts.length === 0) {
+    grid.innerHTML = `<p style="color:var(--muted);font-size:14px;">게시글이 없습니다.</p>`;
+    return;
+  }
+
+  grid.innerHTML = posts.slice(0, IMWEB_CONFIG.featuredCount).map((post, i) => {
+    const thumb = post.thumbnail_url
+      ? `<img src="${post.thumbnail_url}" alt="${post.subject}" />`
+      : PLACEHOLDER_SVGS[i % PLACEHOLDER_SVGS.length];
+    const category = (post.category_name || post.tags?.[0] || "인사이트").toUpperCase();
+    const excerpt = post.summary || post.content?.replace(/<[^>]+>/g, "").slice(0, 80) + "…" || "";
+    const author = post.writer_name || "VC route 리서치팀";
+    const readTime = estimateReadTime(post.content);
+
+    return `
+    <a class="card" href="${post.url || '#'}" ${post.url ? 'target="_blank"' : ''}>
+      <div class="thumb">${thumb}</div>
+      <div class="tags">${category}</div>
+      <h3>${post.subject}</h3>
+      <p class="excerpt">${excerpt}</p>
+      <div class="byline">${author} · ${readTime}</div>
+    </a>`;
+  }).join("");
+}
+
+// =====================================================
+// 최근 글 목록 렌더링
+// =====================================================
+function renderRecentList(posts) {
+  const list = document.getElementById("recent-list");
+  if (!posts || posts.length === 0) {
+    list.innerHTML = "";
+    return;
+  }
+
+  // featured 이후 게시글부터 표시 (또는 전체에서 최신순)
+  const recentPosts = posts.slice(IMWEB_CONFIG.featuredCount, IMWEB_CONFIG.featuredCount + IMWEB_CONFIG.recentCount);
+  if (recentPosts.length === 0) return;
+
+  list.innerHTML = recentPosts.map((post, i) => {
+    const num = String(recentPosts.length - i).padStart(3, "0");
+    const category = post.category_name || post.tags?.[0] || "인사이트";
+    return `
+    <a class="mini" href="${post.url || '#'}" ${post.url ? 'target="_blank"' : ''}>
+      <div class="num">No. ${num}</div>
+      <h4>${post.subject}</h4>
+      <div class="meta">${formatDate(post.create_date)} · ${category}</div>
+    </a>`;
+  }).join("");
+}
+
+// =====================================================
+// 스켈레톤 렌더링
+// =====================================================
+function renderSkeletons() {
+  const grid = document.getElementById("featured-grid");
+  grid.innerHTML = Array(4).fill(`
+    <div>
+      <div class="skeleton skel-thumb"></div>
+      <div class="skeleton skel-line" style="width:40%"></div>
+      <div class="skeleton skel-title" style="width:90%"></div>
+      <div class="skeleton skel-title" style="width:75%"></div>
+      <div class="skeleton skel-line" style="width:30%"></div>
+    </div>
+  `).join("");
+}
+
+// =====================================================
+// 메인 초기화
+// =====================================================
+async function init() {
+  renderSkeletons();
+
+  // API Key가 기본값이면 목업 데이터로 대체
+  if (IMWEB_CONFIG.apiKey === "YOUR_API_KEY") {
+    document.getElementById("api-notice").style.display = "block";
+    loadMockData();
+    return;
+  }
+
+  try {
+    const totalNeeded = IMWEB_CONFIG.featuredCount + IMWEB_CONFIG.recentCount;
+    const result = await fetchPosts(totalNeeded, 1);
+    renderFeaturedCards(result.list);
+    renderRecentList(result.list);
+  } catch (err) {
+    console.error("아임웹 API 오류:", err);
+    document.getElementById("api-notice").style.display = "block";
+    document.getElementById("api-notice").textContent =
+      `⚠️ API 오류: ${err.message}. 아래는 샘플 데이터입니다.`;
+    loadMockData();
+  }
+}
+
+// 목업 데이터 (API 미연결 시 표시)
+function loadMockData() {
+  const mockPosts = [
+    {
+      subject: "2026년 1분기 한국 벤처투자 시장: 회복의 신호인가, 일시적 반등인가",
+      summary: "투자 건수는 늘었지만 평균 라운드 사이즈는 여전히 작은 이번 분기, 데이터로 살펴본 4가지 변화.",
+      category_name: "시장 리포트 · 트렌드", writer_name: "윤지호", content: "a".repeat(4000), url: "#"
+    },
+    {
+      subject: "심사역이 IR 덱의 첫 3장에서 확인하는 5가지 신호",
+      summary: "100건이 넘는 IR 미팅에서 반복적으로 등장한 패턴. 첫 3장이 결정한다.",
+      category_name: "IR 전략 · 가이드", writer_name: "박수민", content: "a".repeat(3000), url: "#"
+    },
+    {
+      subject: `"우리는 적자를 두려워하지 않습니다" — 알토스벤처스 김한준 대표 인터뷰`,
+      summary: "유니콘을 만든 투자 철학, 그리고 한국 시장에서 그가 여전히 베팅하는 이유.",
+      category_name: "투자자 인터뷰", writer_name: "이재민", content: "a".repeat(6000), url: "#"
+    },
+    {
+      subject: "Pre-A부터 Series C까지 — 라운드별로 달라지는 밸류에이션 로직",
+      summary: "매출 0원에서 ARR 100억까지, 단계별로 투자자가 보는 숫자가 어떻게 달라지는가.",
+      category_name: "투자 가이드 · 입문", writer_name: "최서연", content: "a".repeat(5000), url: "#"
+    },
+    {
+      subject: "SAFE 노트와 컨버터블 노트, 한국 스타트업이 자주 놓치는 차이",
+      summary: "", category_name: "법무 가이드", writer_name: "편집팀",
+      create_date: "2026-04-02", content: "a".repeat(2000), url: "#"
+    },
+    {
+      subject: "딥테크 투자에 적합한 KPI는 무엇인가 — 매출이 답이 아닐 때",
+      summary: "", category_name: "시장 리포트", writer_name: "편집팀",
+      create_date: "2026-03-28", content: "a".repeat(2000), url: "#"
+    },
+    {
+      subject: "해외 투자자와의 첫 미팅 전에 준비해야 할 6가지",
+      summary: "", category_name: "IR 전략", writer_name: "편집팀",
+      create_date: "2026-03-21", content: "a".repeat(2000), url: "#"
+    },
+  ];
+  renderFeaturedCards(mockPosts);
+  renderRecentList(mockPosts);
+}
+
+window.addEventListener("DOMContentLoaded", init);
+</script>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="brand" href="#">
+      <span class="brand-mark">VC</span>
+      <span>route Insights</span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="#">투자 가이드</a></li>
+        <li><a href="#">IR 전략</a></li>
+        <li><a href="#">시장 리포트</a></li>
+        <li><a href="#">투자자 인터뷰</a></li>
+        <li><a href="#">소개</a></li>
+      </ul>
+    </nav>
+    <a class="cta-top" href="https://ventureplatform.biz">VC route 시작하기</a>
+  </div>
+</header>
+
+<main>
+  <div id="api-notice" class="api-notice">
+    ⚙️ <strong>개발 모드:</strong> IMWEB_CONFIG의 apiKey / secretKey / boardCode를 실제 값으로 교체하면 아임웹 게시글이 자동으로 불러와집니다.
+  </div>
+
+  <section class="layout">
+    <aside class="intro">
+      <span class="eyebrow">Insights</span>
+      <h1>벤처투자, 더 명확한 길을 찾는 사람들을 위한 인사이트</h1>
+      <p>VC route Insights는 스타트업과 투자자가 더 빠르고 똑똑한 의사결정을 할 수 있도록, 시장 데이터·IR 노하우·딜 분석을 매주 정리해 전합니다.</p>
+      <div class="meta">
+        에디터 · <strong>VC route 리서치팀</strong><br/>
+        업데이트 · 매주 화요일
+      </div>
+    </aside>
+    <div class="grid" id="featured-grid">
+      <!-- JS로 채워집니다 -->
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">
+      <h2>최근 글</h2>
+      <a href="#">전체 보기</a>
+    </div>
+    <div class="list" id="recent-list">
+      <!-- JS로 채워집니다 -->
+    </div>
+  </section>
+
+  <section class="newsletter">
+    <div>
+      <h3>매주 화요일, 벤처투자 시장의 가장 중요한 흐름을 받아보세요</h3>
+      <p>VC route 리서치팀이 직접 큐레이션한 시장 데이터, 딜 분석, 심사역 인사이트를 한 통의 이메일로.</p>
+    </div>
+    <form class="form" onsubmit="event.preventDefault();">
+      <input type="email" placeholder="your@email.com" />
+      <button type="submit">구독하기</button>
+    </form>
+  </section>
+</main>
+
+<footer>
+  <div class="foot">
+    <div>
+      <a class="brand" href="#" style="margin-bottom:14px;display:inline-flex;gap:10px;">
+        <span class="brand-mark">VC</span>
+        <span>route Insights</span>
+      </a>
+      <p style="margin-top:14px;">스타트업 투자 여정을 더 똑똑하게.<br/>VC route의 공식 인사이트 블로그입니다.</p>
+    </div>
+    <div>
+      <h5>카테고리</h5>
+      <ul>
+        <li><a href="#">투자 가이드</a></li>
+        <li><a href="#">IR 전략</a></li>
+        <li><a href="#">시장 리포트</a></li>
+        <li><a href="#">투자자 인터뷰</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>VC route</h5>
+      <ul>
+        <li><a href="https://ventureplatform.biz">메인 사이트</a></li>
+        <li><a href="#">AI 심사 & 매칭</a></li>
+        <li><a href="#">투자펀드 찾기</a></li>
+        <li><a href="#">가격</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>연결</h5>
+      <ul>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">X (Twitter)</a></li>
+        <li><a href="#">RSS</a></li>
+        <li><a href="#">문의하기</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copy">
+    <span>© 2026 VC route. All rights reserved.</span>
+    <span>Powered by VC route × imweb</span>
+  </div>
+</footer>
+
+</body>
+</html>
