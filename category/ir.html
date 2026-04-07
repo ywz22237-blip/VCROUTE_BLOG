@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>IR 전략 — VC route Insights</title>
+<meta name="description" content="심사역이 첫 3장에서 보는 신호. 실제 IR 미팅에서 통하는 디테일." />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="brand" href="/">
+      <span class="brand-mark">VC</span>
+      <span>route Insights</span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="/category/guide.html">투자 가이드</a></li>
+        <li><a href="/category/ir.html" class="active">IR 전략</a></li>
+        <li><a href="/category/market.html">시장 리포트</a></li>
+        <li><a href="/category/interview.html">투자자 인터뷰</a></li>
+      </ul>
+    </nav>
+    <div class="search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="search" placeholder="검색어를 입력하세요" />
+    </div>
+    <a class="cta-top" href="https://vcroute.com">VC route 시작하기</a>
+  </div>
+</header>
+
+<main>
+  <div id="api-notice" class="api-notice">
+    ⚙️ <strong>개발 모드:</strong> 아임웹 API가 연결되지 않아 샘플 데이터를 표시합니다.
+  </div>
+
+  <section class="cat-hero">
+    <span class="eyebrow">Category</span>
+    <h1>IR 전략</h1>
+    <p>심사역이 IR 덱의 첫 3장에서 확인하는 신호들. 실제 미팅에서 통하는 디테일과 노하우를 다룹니다.</p>
+  </section>
+
+  <section>
+    <div class="cat-grid" id="featured-grid">
+      <!-- JS 렌더링 -->
+    </div>
+  </section>
+
+  <section class="newsletter">
+    <div>
+      <h3>매주 화요일, 벤처투자 시장의 가장 중요한 흐름을 받아보세요</h3>
+      <p>VC route 리서치팀이 직접 큐레이션한 시장 데이터, 딜 분석, 심사역 인사이트를 한 통의 이메일로.</p>
+    </div>
+    <form class="form" onsubmit="event.preventDefault();">
+      <input type="email" placeholder="your@email.com" />
+      <button type="submit">구독하기</button>
+    </form>
+  </section>
+</main>
+
+<footer>
+  <div class="foot">
+    <div>
+      <a class="brand" href="/" style="margin-bottom:14px;display:inline-flex;gap:10px;">
+        <span class="brand-mark">VC</span>
+        <span>route Insights</span>
+      </a>
+      <p style="margin-top:14px;">스타트업 투자 여정을 더 똑똑하게.<br/>VC route의 공식 인사이트 블로그입니다.</p>
+    </div>
+    <div>
+      <h5>카테고리</h5>
+      <ul>
+        <li><a href="/category/guide.html">투자 가이드</a></li>
+        <li><a href="/category/ir.html">IR 전략</a></li>
+        <li><a href="/category/market.html">시장 리포트</a></li>
+        <li><a href="/category/interview.html">투자자 인터뷰</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>VC route</h5>
+      <ul>
+        <li><a href="https://vcroute.com">메인 사이트</a></li>
+        <li><a href="https://vcroute.com">AI 심사 & 매칭</a></li>
+        <li><a href="https://vcroute.com">투자펀드 찾기</a></li>
+        <li><a href="https://vcroute.com">가격</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>연결</h5>
+      <ul>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">X (Twitter)</a></li>
+        <li><a href="#">RSS</a></li>
+        <li><a href="#">문의하기</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copy">
+    <span>© 2026 VC route. All rights reserved.</span>
+    <span>Powered by VC route × imweb</span>
+  </div>
+</footer>
+
+<script src="/assets/app.js"></script>
+<script>window.addEventListener("DOMContentLoaded", () => initCategory("ir"));</script>
+</body>
+</html>
